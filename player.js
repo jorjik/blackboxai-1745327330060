@@ -1,22 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('Player script loaded');
   const urlParams = new URLSearchParams(window.location.search);
   const trackId = urlParams.get('track');
 
   const tracks = {
-    track1: { name: 'Track 1', file: 'audio/track1.mp3' },
-    track2: { name: 'Track 2', file: 'audio/track2.mp3' },
-    track3: { name: 'Track 3', file: 'audio/track3.mp3' },
+    'binaural-beat': { name: 'Binaural Beat', file: 'audio/binaural-beat.mp3' },
+    'deep-sleep': { name: 'Deep Sleep', file: 'audio/deep-sleep.mp3' },
+    'dreamer': { name: 'Dreamer', file: 'audio/dreamer.mp3' },
+    'heaven-water': { name: 'Heaven Water', file: 'audio/heaven-water.mp3' },
+    'morning-relax': { name: 'Morning Relax', file: 'audio/morning-relax.mp3' },
+    'om-chanting': { name: 'Om Chanting', file: 'audio/om-chanting.mp3' },
+    'peaceful': { name: 'Peaceful', file: 'audio/peaceful.mp3' },
+    'sleep': { name: 'Sleep', file: 'audio/sleep.mp3' }
   };
 
   const track = tracks[trackId];
   const audioPlayer = document.getElementById('audio-player');
   const trackTitle = document.getElementById('track-title');
   const playPauseBtn = document.getElementById('play-pause-btn');
-  const timerBtn = document.getElementById('timer-btn');
-  const timerPopup = document.getElementById('timer-popup');
+  const timerModal = document.getElementById('timer-modal');
   const timerRemaining = document.getElementById('timer-remaining');
-  const timerCancel = document.getElementById('timer-cancel');
   const timerOptions = document.querySelectorAll('.timer-option');
+
+  console.log('Player elements found:', {
+    audioPlayer: !!audioPlayer,
+    trackTitle: !!trackTitle,
+    playPauseBtn: !!playPauseBtn,
+    timerModal: !!timerModal,
+    timerOptions: timerOptions.length
+  });
 
   let timerId = null;
   let timerEndTime = null;
@@ -40,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   playPauseBtn.addEventListener('click', () => {
+    console.log('Play/Pause clicked');
     if (audioPlayer.paused) {
       audioPlayer.play();
     } else {
@@ -48,14 +61,18 @@ document.addEventListener('DOMContentLoaded', () => {
     updatePlayPauseIcon();
   });
 
-  // Timer popup show/hide
-  timerBtn.addEventListener('click', () => {
-    timerPopup.classList.remove('hidden');
-  });
-
-  timerCancel.addEventListener('click', () => {
-    timerPopup.classList.add('hidden');
-  });
+  // Back button stops playback and navigates back
+  const backBtn = document.getElementById('back-btn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      console.log('Back button clicked');
+      audioPlayer.pause();
+      updatePlayPauseIcon();
+      window.location.href = 'index.html';
+    });
+  } else {
+    console.error('Back button not found');
+  }
 
   function clearTimer() {
     if (timerId) {
@@ -77,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (diff <= 0) {
       clearTimer();
       audioPlayer.pause();
+      updatePlayPauseIcon();
       timerRemaining.textContent = 'Timer ended';
       return;
     }
@@ -87,16 +105,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   timerOptions.forEach(btn => {
     btn.addEventListener('click', () => {
-      const minutes = parseInt(btn.getAttribute('data-minutes'), 10);
+      console.log('Timer option clicked:', btn.dataset.minutes);
+      const minutes = parseInt(btn.dataset.minutes, 10);
       clearTimer();
       timerEndTime = Date.now() + minutes * 60000;
       timerId = setTimeout(() => {
         audioPlayer.pause();
+        updatePlayPauseIcon();
         timerRemaining.textContent = 'Timer ended';
       }, minutes * 60000);
       timerInterval = setInterval(updateRemainingTime, 1000);
       updateRemainingTime();
-      timerPopup.classList.add('hidden');
+      timerModal.style.display = 'none';
     });
   });
+
+  console.log('Player initialized');
 });
