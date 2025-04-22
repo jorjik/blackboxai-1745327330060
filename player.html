@@ -7,34 +7,98 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="player.js"></script>
+  <style>
+    #timer-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+  </style>
 </head>
 <body class="bg-gray-900 text-white font-['Roboto'] min-h-screen flex flex-col items-center justify-center p-4">
   <h1 class="text-3xl font-bold mb-8" id="track-title">Loading...</h1>
   <audio id="audio-player" loop></audio>
-  <div class="flex space-x-6 items-center">
+  <div class="flex space-x-6 items-center mb-6">
     <button id="play-pause-btn" class="text-4xl focus:outline-none">
       <i class="fas fa-play"></i>
     </button>
-    <button id="timer-btn" class="text-3xl focus:outline-none" title="Set Timer">
+    <button id="timer-btn" class="text-3xl focus:outline-none p-4" title="Set Timer">
       <i class="fas fa-clock"></i>
     </button>
   </div>
+  <div class="flex justify-center">
+    <button id="back-btn" class="bg-blue-600 hover:bg-blue-700 rounded-md py-3 px-6 text-lg font-semibold flex items-center space-x-2" title="Back">
+      <i class="fas fa-arrow-left"></i>
+      <span>Back</span>
+    </button>
+  </div>
 
-  <!-- Timer Popup -->
-  <div id="timer-popup" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden">
-    <div class="bg-gray-800 rounded-lg p-6 w-80 max-w-full">
+  <!-- Timer Modal -->
+  <div id="timer-modal">
+    <div class="bg-gray-800 rounded-lg p-6 w-80 max-w-[90vw] shadow-lg">
       <h2 class="text-xl font-semibold mb-4">Set Timer</h2>
       <div class="flex flex-col space-y-3">
-        <button class="timer-option bg-blue-600 hover:bg-blue-700 rounded-md py-2" data-minutes="5">5 minutes</button>
-        <button class="timer-option bg-blue-600 hover:bg-blue-700 rounded-md py-2" data-minutes="10">10 minutes</button>
-        <button class="timer-option bg-blue-600 hover:bg-blue-700 rounded-md py-2" data-minutes="15">15 minutes</button>
-        <button class="timer-option bg-blue-600 hover:bg-blue-700 rounded-md py-2" data-minutes="30">30 minutes</button>
-        <button id="timer-cancel" class="mt-4 bg-red-600 hover:bg-red-700 rounded-md py-2">Cancel</button>
+        <button class="timer-option bg-blue-600 hover:bg-blue-700 rounded-md py-3 px-4 transition-colors" data-minutes="5">5 minutes</button>
+        <button class="timer-option bg-blue-600 hover:bg-blue-700 rounded-md py-3 px-4 transition-colors" data-minutes="10">10 minutes</button>
+        <button class="timer-option bg-blue-600 hover:bg-blue-700 rounded-md py-3 px-4 transition-colors" data-minutes="15">15 minutes</button>
+        <button class="timer-option bg-blue-600 hover:bg-blue-700 rounded-md py-3 px-4 transition-colors" data-minutes="30">30 minutes</button>
+        <button id="timer-cancel" class="mt-4 bg-red-600 hover:bg-red-700 rounded-md py-3 px-4 transition-colors">Cancel</button>
       </div>
     </div>
   </div>
 
   <div id="timer-remaining" class="mt-6 text-lg"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const timerBtn = document.getElementById('timer-btn');
+      const timerModal = document.getElementById('timer-modal');
+      const timerCancel = document.getElementById('timer-cancel');
+
+      console.log('Modal elements:', {
+        timerBtn: !!timerBtn,
+        timerModal: !!timerModal,
+        timerCancel: !!timerCancel
+      });
+
+      // Show modal
+      document.addEventListener('click', function(e) {
+        const target = e.target;
+        console.log('Click event target:', target.tagName, target.id, target.className);
+
+        // Check if click is on timer button or its icon
+        if (target.id === 'timer-btn' || (target.tagName === 'I' && target.closest('#timer-btn'))) {
+          console.log('Timer button or icon clicked');
+          timerModal.style.display = 'flex';
+          console.log('Modal style:', timerModal.style.display);
+        }
+      });
+
+      // Hide modal
+      timerCancel.addEventListener('click', function(e) {
+        console.log('Cancel button clicked');
+        timerModal.style.display = 'none';
+      });
+
+      // Close modal when clicking outside
+      timerModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          console.log('Modal background clicked');
+          timerModal.style.display = 'none';
+        }
+      });
+
+      // Debug initial state
+      console.log('Initial modal style:', timerModal.style.display);
+    });
+  </script>
+  <script defer src="player.js"></script>
 </body>
 </html>
