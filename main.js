@@ -1,8 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
   const tracks = [
-    { id: 'track1', name: 'Track 1', file: 'audio/track1.mp3' },
-    { id: 'track2', name: 'Track 2', file: 'audio/track2.mp3' },
-    { id: 'track3', name: 'Track 3', file: 'audio/track3.mp3' },
+    { id: 'binaural-beat', name: 'Binaural Beat', file: 'audio/binaural-beat.mp3' },
+    { id: 'deep-sleep', name: 'Deep Sleep', file: 'audio/deep-sleep.mp3' },
+    { id: 'dreamer', name: 'Dreamer', file: 'audio/dreamer.mp3' },
+    { id: 'heaven-water', name: 'Heaven Water', file: 'audio/heaven-water.mp3' },
+    { id: 'morning-relax', name: 'Morning Relax', file: 'audio/morning-relax.mp3' },
+    { id: 'om-chanting', name: 'Om Chanting', file: 'audio/om-chanting.mp3' },
+    { id: 'peaceful', name: 'Peaceful', file: 'audio/peaceful.mp3' },
+    { id: 'sleep', name: 'Sleep', file: 'audio/sleep.mp3' }
   ];
 
   const trackList = document.getElementById('track-list');
@@ -18,3 +23,4 @@ document.addEventListener('DOMContentLoaded', () => {
     trackList.appendChild(btn);
   });
 });
+
